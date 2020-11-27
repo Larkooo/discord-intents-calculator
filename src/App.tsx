@@ -192,8 +192,6 @@ function App() {
     if(state.theme === 'dark') {setState({...state, theme: 'light'}); localStorage.setItem('theme', 'light')} else {setState({...state, theme: 'dark'}); localStorage.setItem('theme', 'dark')}
   }
 
-  let eventsCount;
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
