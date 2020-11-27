@@ -1,7 +1,8 @@
-import { Button, Checkbox, Container, createStyles, FormControlLabel, FormGroup, Grid, Link, ListItem, ListItemText, makeStyles, Paper, Theme, Tooltip, Typography } from '@material-ui/core';
+import { Button, Checkbox, Container, createMuiTheme, createStyles, CssBaseline, FormControlLabel, FormGroup, Grid, IconButton, Link, ListItem, ListItemText, makeStyles, Paper, Switch, Theme, Tooltip, Typography } from '@material-ui/core';
+import { Brightness6, Brightness7 } from '@material-ui/icons';
+import { ThemeProvider } from "@material-ui/styles";
 
 import React from 'react';
-import './App.css';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     paper: {
-      height:666,
+      height:725,
       maxWidth: 400,
       margin: 'auto',
       padding: theme.spacing(2),
@@ -115,6 +116,7 @@ function App() {
   }
 
   const [state, setState] : any = React.useState({
+    theme: 'dark',
     GUILDS: false,
     GUILD_MEMBERS: false,
     GUILD_BANS: false,
@@ -130,35 +132,108 @@ function App() {
     DIRECT_MESSAGES: false,
     DIRECT_MESSAGE_REACTIONS: false,
     DIRECT_MESSAGE_TYPING: false,
+    privilegedIntents: {
+      presence: false,
+      guildMembers: false
+    },
     intents: 0
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let intentsValue;
-    if(event.target.checked) { 
-      intentsValue = state.intents += 1 << Object.keys(state).indexOf(event.target.name)
+    if(event.target.name != "presence" && event.target.name != "guildMembers") {
+      if(event.target.checked) { 
+        intentsValue = state.intents += 1 << Object.keys(state).indexOf(event.target.name)
+      } else {
+        intentsValue = state.intents -= 1 << Object.keys(state).indexOf(event.target.name) 
+      }
+      setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue});
     } else {
-      intentsValue = state.intents -= 1 << Object.keys(state).indexOf(event.target.name) 
+      console.log(event.target.name)
+      if(event.target.name === "presence") {
+        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
+      } else {
+        console.log({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}})
+        setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}});
+      }
+      
     }
+
+    
     console.log(intentsValue)
-    setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue});
+    
   };
 
+  const resetIntents = () => {
+    setState({
+      theme: state.theme,
+      GUILDS: false,
+      GUILD_MEMBERS: false,
+      GUILD_BANS: false,
+      GUILD_EMOJIS: false,
+      GUILD_INTEGRATIONS: false,
+      GUILD_WEBHOOKS: false,
+      GUILD_INVITES: false,
+      GUILD_VOICE_STATES: false,
+      GUILD_PRESENCES: false,
+      GUILD_MESSAGES: false,
+      GUILD_MESSAGE_REACTIONS: false,
+      GUILD_MESSAGE_TYPING: false,
+      DIRECT_MESSAGES: false,
+      DIRECT_MESSAGE_REACTIONS: false,
+      DIRECT_MESSAGE_TYPING: false,
+      privilegedIntents: state.privilegedIntents,
+      intents: 0,
+    })
+  }
+
+  const theme = createMuiTheme({
+    palette: {
+      type: state.theme
+    }
+  });
+
+  const darkMode = () => {
+    if(state.theme === 'dark') {setState({...state, theme: 'light'})} else {setState({...state, theme: 'dark'})}
+  }
 
   return (
-    <Container className={classes.align}>
-      <Typography variant='h3'>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container className={classes.align}>
+      <Typography variant='h4'>
         Discord Intents Calculator
       </Typography>
-
-      <br/>
 
       <Typography variant='body1'>
         Learn more about <Link href="https://discord.com/developers/docs/topics/gateway#gateway-intents">Gateway Intents</Link>
       </Typography>
-      <Typography variant="body2">
-      On October 7, 2020 the events under the GUILD_PRESENCES and GUILD_MEMBERS intents will be turned off by default on all gateway versions. If you are using Gateway v6, you will receive those events if you have enabled the flags for those intents in the Developer Portal and have been verified if your bot is in 100 or more guilds. You do not need to use Intents on Gateway v6 to receive these events; you just need to enable the flags.
-      </Typography>
+
+      <FormControlLabel
+        control={
+          <Switch
+            checked={state.privilegedIntents.presence}
+            onChange={handleChange}
+            name="presence"
+            color="primary"
+          />
+        }
+        label="Presence Intent"
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={state.privilegedIntents.guildMembers}
+            onChange={handleChange}
+            name="guildMembers"
+            color="primary"
+          />
+        }
+        label="Server Members"
+      />
+      <IconButton aria-label="theme" onClick={() => darkMode()}>
+          {state.theme === 'dark' ? <Brightness7 fontSize='small' /> : <Brightness6 fontSize="small"/>}
+        </IconButton>
 
       <br/>
 
@@ -172,11 +247,14 @@ function App() {
             {
               Object.keys(intents).map(key => 
                 <FormControlLabel
-                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' />}
+                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} />}
                   label={key}
                   key={key}
                 />
               )
+            }
+            {
+              Object.keys(state).some(key => state[key] === true) && <Button onClick={() => resetIntents()} key='resetIntents'>Clear</Button> 
             }
             </FormGroup>
           </Paper>
@@ -207,14 +285,20 @@ function App() {
       </Grid>
 
       <br/>
-
-      <Button variant="outlined" onClick={() => copyToClipboard(state.intents)}>
-        Intents : {state.intents}
-      </Button>
+      
+      <Tooltip title="Copy Intents Payload">
+        <Button variant="outlined" onClick={() => copyToClipboard(state.intents)}>
+          Intents : {state.intents}
+        </Button>
+      </Tooltip>
+      
       <br/>
       <Typography variant='caption'>Click on this button to copy</Typography>
-      
+
+      <p style={{color: 'gray'}}>Copyright © Aymen Djeghmoum</p>      
     </Container>
+    </ThemeProvider>
+    
   );
 }
 
