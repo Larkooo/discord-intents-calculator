@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     paper: {
-      height:725,
+      height:735,
       maxWidth: 400,
       margin: 'auto',
       padding: theme.spacing(2),
@@ -141,7 +141,7 @@ function App() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let intentsValue;
-    if(event.target.name != "presence" && event.target.name != "guildMembers") {
+    if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
       if(event.target.checked) { 
         intentsValue = state.intents += 1 << Object.keys(state).indexOf(event.target.name)
       } else {
@@ -149,18 +149,13 @@ function App() {
       }
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue});
     } else {
-      console.log(event.target.name)
       if(event.target.name === "presence") {
         setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
       } else {
-        console.log({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}})
         setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}});
       }
       
     }
-
-    
-    console.log(intentsValue)
     
   };
 
@@ -269,8 +264,8 @@ function App() {
               Object.keys(state).map(key => {
                 if(typeof state[key] === 'boolean') {
                   if(state[key]) {
-                    return intents[key].map((element: any) => <Tooltip title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
-                    <ListItem key={element} onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
+                    return intents[key].map((element: any, index: number) => <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
+                    <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
                       <ListItemText primary={element} />
                     </ListItem>
                   </Tooltip>)
