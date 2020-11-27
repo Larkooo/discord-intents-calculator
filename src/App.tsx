@@ -116,7 +116,7 @@ function App() {
   }
 
   const [state, setState] : any = React.useState({
-    theme: 'dark',
+    theme: localStorage.getItem('theme') || 'dark',
     GUILDS: false,
     GUILD_MEMBERS: false,
     GUILD_BANS: false,
@@ -189,7 +189,7 @@ function App() {
   });
 
   const darkMode = () => {
-    if(state.theme === 'dark') {setState({...state, theme: 'light'})} else {setState({...state, theme: 'dark'})}
+    if(state.theme === 'dark') {setState({...state, theme: 'light'}); localStorage.setItem('theme', 'light')} else {setState({...state, theme: 'dark'}); localStorage.setItem('theme', 'dark')}
   }
 
   return (
@@ -290,7 +290,7 @@ function App() {
       <br/>
       <Typography variant='caption'>Click on this button to copy</Typography>
 
-      <p style={{color: 'gray'}}>Copyright © Aymen Djeghmoum</p>      
+      <p style={{color: 'gray'}}>Copyright © Aymen Djeghmoum - Larko#0031</p>      
     </Container>
     </ThemeProvider>
     
