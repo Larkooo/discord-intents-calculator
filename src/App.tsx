@@ -226,9 +226,12 @@ function App() {
         }
         label="Server Members"
       />
+      <Tooltip title={state.theme === 'dark' ? "Turn on the lights" : "Turn off the lights"}>
       <IconButton aria-label="theme" onClick={() => darkMode()}>
           {state.theme === 'dark' ? <Brightness7 fontSize='small' /> : <Brightness6 fontSize="small"/>}
         </IconButton>
+      </Tooltip>
+      
 
       <br/>
 
