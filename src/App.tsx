@@ -261,19 +261,15 @@ function App() {
               </Typography>
             <FormGroup>
             {
-              Object.keys(state).map(key => {
-                if(typeof state[key] === 'boolean') {
-                  if(state[key]) {
-                    return intents[key].map((element: any, index: number) => <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
+              Object.keys(state).filter(key => state[key] === true).map(key => {
+                return intents[key].map((element: any, index: number) => <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
                     <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
                       <ListItemText primary={element} />
                     </ListItem>
                   </Tooltip>)
-                  }
-                }
-                
               })
-            }
+              }
+            
             </FormGroup>
           </Paper>
         </Grid>
