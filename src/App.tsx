@@ -133,8 +133,8 @@ function App() {
     DIRECT_MESSAGE_REACTIONS: false,
     DIRECT_MESSAGE_TYPING: false,
     privilegedIntents: {
-      presence: false,
-      guildMembers: false
+      presence: localStorage.getItem('presenceIntent') === 'true' || false,
+      guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false
     },
     intents: 0
   });
@@ -151,8 +151,10 @@ function App() {
     } else {
       if(event.target.name === "presence") {
         setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
+        localStorage.setItem('presenceIntent', event.target.checked.toString())
       } else {
         setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}});
+        localStorage.setItem('guildMembersIntent', event.target.checked.toString())
       }
       
     }
