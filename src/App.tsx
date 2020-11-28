@@ -42,7 +42,11 @@ function App() {
 
   const classes = useStyles();
 
-  const intents : any = {
+  interface intentsInterface {
+    [key: string]: string[]
+  }
+
+  const intents : intentsInterface = {
     GUILDS: [
       "GUILD_CREATE",
       "GUILD_UPDATE",
@@ -267,7 +271,7 @@ function App() {
             <FormGroup>
             {
               Object.keys(state).filter(key => state[key] === true).map(key => {
-                return intents[key].map((element: any, index: number) => <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
+                return intents[key].map((element, index) => <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
                     <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
                       <ListItemText primary={element} />
                     </ListItem>
