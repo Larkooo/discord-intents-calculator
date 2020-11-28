@@ -1,4 +1,4 @@
-import { Button, Checkbox, Container, createMuiTheme, createStyles, CssBaseline, FormControlLabel, FormGroup, Grid, IconButton, Link, ListItem, ListItemText, makeStyles, Paper, Switch, Theme, Tooltip, Typography } from '@material-ui/core';
+import { Button, Checkbox, Container, createMuiTheme, createStyles, CssBaseline, FormControlLabel, FormGroup, Grid, IconButton, Link, List, ListItem, ListItemText, makeStyles, Paper, Switch, Theme, Tooltip, Typography } from '@material-ui/core';
 import { Brightness6, Brightness7 } from '@material-ui/icons';
 import { ThemeProvider } from "@material-ui/styles";
 
@@ -280,6 +280,7 @@ function App() {
             <Typography variant='h6'>
               What you have access to ({state.eventsCount} events)
               </Typography>
+              <List dense component="div" role="list">
             {
               basicIntents.map(intent => <Tooltip key={intent.toString()} title={"Open Discord Api Docs about #" + intent.toLowerCase().trim().replace(/_/g, "-")} >
               <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + intent.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
@@ -298,6 +299,7 @@ function App() {
                   })
               })
               }
+              </List>
             
           </Paper>
         </Grid>
