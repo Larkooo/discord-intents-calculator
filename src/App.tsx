@@ -143,7 +143,7 @@ function App() {
     intents: 0
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
     let intentsValue;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
       if(event.target.checked) { 
@@ -194,7 +194,7 @@ function App() {
     }
   });
 
-  const darkMode = () => {
+  const darkMode = ():void => {
     if(state.theme === 'dark') {setState({...state, theme: 'light'}); localStorage.setItem('theme', 'light')} else {setState({...state, theme: 'dark'}); localStorage.setItem('theme', 'dark')}
   }
 
