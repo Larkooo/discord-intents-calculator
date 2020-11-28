@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const copyToClipboard = (content: any) => {
+const copyToClipboard = (content: string) => {
   const el = document.createElement('textarea');
   el.value = content;
   document.body.appendChild(el);
@@ -45,6 +45,13 @@ function App() {
   interface intentsInterface {
     [key: string]: string[]
   }
+
+  const basicIntents:string[] = [
+    "READY",
+    "RESUMED",
+    "VOICE_SERVER_UPDATE",
+    "USER_UPDATE"
+  ]
 
   const intents : intentsInterface = {
     GUILDS: [
@@ -140,18 +147,22 @@ function App() {
       presence: localStorage.getItem('presenceIntent') === 'true' || false,
       guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false
     },
-    intents: 0
+    intents: 0,
+    eventsCount: 4
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
     let intentsValue;
+    let eventsCountValue;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
       if(event.target.checked) { 
         intentsValue = state.intents += 1 << Object.keys(state).indexOf(event.target.name)
+        eventsCountValue = state.eventsCount+intents[event.target.name].length
       } else {
         intentsValue = state.intents -= 1 << Object.keys(state).indexOf(event.target.name) 
+        eventsCountValue = state.eventsCount-intents[event.target.name].length
       }
-      setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue});
+      setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
         setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
@@ -185,6 +196,7 @@ function App() {
       DIRECT_MESSAGE_TYPING: false,
       privilegedIntents: state.privilegedIntents,
       intents: 0,
+      eventsCount: basicIntents.length
     })
   }
 
@@ -207,7 +219,7 @@ function App() {
       </Typography>
 
       <Typography variant='body1'>
-        Learn more about <Link href="https://discord.com/developers/docs/topics/gateway#gateway-intents">Gateway Intents</Link>
+        Learn more about <Link href="https://discord.com/developers/docs/topics/gateway#gateway-intents" target="_blank">Gateway Intents</Link>
       </Typography>
 
       <FormControlLabel
@@ -266,20 +278,27 @@ function App() {
         <Grid item xs={4}>
           <Paper elevation={5} className={classes.paper}>
             <Typography variant='h6'>
-              What you have access to
+              What you have access to ({state.eventsCount} events)
               </Typography>
-            <FormGroup>
             {
+              basicIntents.map(intent => <Tooltip key={intent.toString()} title={"Open Discord Api Docs about #" + intent.toLowerCase().trim().replace(/_/g, "-")} >
+              <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + intent.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
+                <ListItemText primary={intent} />
+              </ListItem>
+            </Tooltip>)
+          }
+          {
               Object.keys(state).filter(key => state[key] === true).map(key => {
-                return intents[key].map((element, index) => <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
+                return intents[key].map((element, index) => {
+                  return <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
                     <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
                       <ListItemText primary={element} />
                     </ListItem>
-                  </Tooltip>)
+                  </Tooltip>
+                  })
               })
               }
             
-            </FormGroup>
           </Paper>
         </Grid>
       </Grid>
