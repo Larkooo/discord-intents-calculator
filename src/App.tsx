@@ -263,7 +263,7 @@ function App() {
             {
               Object.keys(intents).map(key => 
                 <FormControlLabel
-                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} />}
+                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} indeterminate={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} />}
                   label={key}
                   key={key}
                 />
