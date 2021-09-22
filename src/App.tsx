@@ -4,6 +4,8 @@ import { ThemeProvider } from "@material-ui/styles";
 
 import React from 'react';
 
+import { defaultIntents, intents } from './Intents';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     align: {
@@ -28,170 +30,32 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const copyToClipboard = (content: string) => {
-  const el = document.createElement('textarea');
-  el.value = content;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-  alert('Copied ' + content)
-};
-
 function App() {
 
   const classes = useStyles();
 
-  interface intentsInterface {
-    [key: string]: string[]
-  }
-
-  const basicIntents:string[] = [
-    "READY",
-    "RESUMED",
-    "VOICE_SERVER_UPDATE",
-    "USER_UPDATE",
-    "APPLICATION_COMMAND_CREATE",
-    "APPLICATION_COMMAND_UPDATE",
-    "APPLICATION_COMMAND_DELETE",
-    "INTERACTION_CREATE"
-  ]
-
-  const intents : intentsInterface = {
-    GUILDS: [
-      "GUILD_CREATE",
-      "GUILD_UPDATE",
-      "GUILD_DELETE",
-      "GUILD_ROLE_CREATE",
-      "GUILD_ROLE_UPDATE",
-      "GUILD_ROLE_DELETE",
-      "CHANNEL_CREATE",
-      "CHANNEL_UPDATE",
-      "CHANNEL_DELETE",
-      "CHANNEL_PINS_UPDATE",
-      "THREAD_CREATE",
-      "THREAD_UPDATE",
-      "THREAD_DELETE",
-      "THREAD_LIST_SYNC",
-      "THREAD_MEMBER_UPDATE",
-      "THREAD_MEMBERS_UPDATE *",
-      "STAGE_INSTANCE_CREATE",
-      "STAGE_INSTANCE_UPDATE",
-      "STAGE_INSTANCE_DELETE"
-    ],
-
-    GUILD_MEMBERS: [
-      "GUILD_MEMBER_ADD",
-      "GUILD_MEMBER_UPDATE",
-      "GUILD_MEMBER_REMOVE",
-      "THREAD_MEMBERS_UPDATE *",
-    ], 
-
-    GUILD_BANS: [
-      "GUILD_BAN_ADD",
-      "GUILD_BAN_REMOVE",
-    ],
-
-    GUILD_EMOJIS_AND_STICKERS: [
-      "GUILD_EMOJIS_UPDATE",
-      "GUILD_STICKERS_UPDATE",
-    ],
-
-    GUILD_INTEGRATIONS: [
-      "GUILD_INTEGRATIONS_UPDATE",
-      "INTEGRATION_CREATE",
-      "INTEGRATION_UPDATE",
-      "INTEGRATION_DELETE",
-    ],
-
-    GUILD_WEBHOOKS: [
-      "WEBHOOKS_UPDATE"
-    ],
-
-    GUILD_INVITES: [
-      "INVITE_CREATE",
-      "INVITE_DELETE",
-    ],
-
-    GUILD_VOICE_STATES: [
-      "VOICE_STATE_UPDATE"
-    ],
-
-    GUILD_PRESENCES: [
-      "PRESENCE_UPDATE"
-    ],
-
-    GUILD_MESSAGES: [
-      "MESSAGE_CREATE",
-      "MESSAGE_UPDATE",
-      "MESSAGE_DELETE",
-      "MESSAGE_DELETE_BULK",
-    ],
-
-    GUILD_MESSAGE_REACTIONS: [
-      "MESSAGE_REACTION_ADD",
-      "MESSAGE_REACTION_REMOVE",
-      "MESSAGE_REACTION_REMOVE_ALL",
-      "MESSAGE_REACTION_REMOVE_EMOJI",
-    ],
-
-    GUILD_MESSAGE_TYPING: [
-      "TYPING_START"
-    ],
-
-    DIRECT_MESSAGES: [
-      "MESSAGE_CREATE",
-      "MESSAGE_UPDATE",
-      "MESSAGE_DELETE",
-      "CHANNEL_PINS_UPDATE",
-    ],
-
-    DIRECT_MESSAGE_REACTIONS: [
-      "MESSAGE_REACTION_ADD",
-      "MESSAGE_REACTION_REMOVE",
-      "MESSAGE_REACTION_REMOVE_ALL",
-      "MESSAGE_REACTION_REMOVE_EMOJI",
-    ],
-
-    DIRECT_MESSAGE_TYPING: [
-      "TYPING_START"
-    ]
-  }
-
   const [state, setState] : any = React.useState({
     theme: localStorage.getItem('theme') || 'dark',
-    GUILDS: false,
-    GUILD_MEMBERS: false,
-    GUILD_BANS: false,
-    GUILD_EMOJIS_AND_STICKERS: false,
-    GUILD_INTEGRATIONS: false,
-    GUILD_WEBHOOKS: false,
-    GUILD_INVITES: false,
-    GUILD_VOICE_STATES: false,
-    GUILD_PRESENCES: false,
-    GUILD_MESSAGES: false,
-    GUILD_MESSAGE_REACTIONS: false,
-    GUILD_MESSAGE_TYPING: false,
-    DIRECT_MESSAGES: false,
-    DIRECT_MESSAGE_REACTIONS: false,
-    DIRECT_MESSAGE_TYPING: false,
+    // just spread the intents here, setting them to false as default
+    ...Object.keys(intents).reduce((acc: any, curr) => (acc[curr]=false, acc), {}),
     privilegedIntents: {
       presence: localStorage.getItem('presenceIntent') === 'true' || false,
       guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false
     },
     intents: 0,
-    eventsCount: basicIntents.length
+    eventsCount: defaultIntents.length
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
-    let intentsValue = state.intents;
-    let eventsCountValue = state.eventsCount;
+    let intentsValue: number = state.intents;
+    let eventsCountValue: number = state.eventsCount;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
-      if(event.target.checked) { 
-        intentsValue += 1 << (Object.keys(state).indexOf(event.target.name) - 1)
+      if(event.target.checked) {
+        // index of the key is the offset of the bit shifting, eg. 1 << 0 (guild)
+        intentsValue += 1 << Object.keys(intents).indexOf(event.target.name)
         eventsCountValue += intents[event.target.name].length
       } else {
-        intentsValue -= 1 << (Object.keys(state).indexOf(event.target.name) - 1)
+        intentsValue -= 1 << Object.keys(intents).indexOf(event.target.name)
         eventsCountValue -= intents[event.target.name].length
       }
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
@@ -211,24 +75,10 @@ function App() {
   const resetIntents = () => {
     setState({
       theme: state.theme,
-      GUILDS: false,
-      GUILD_MEMBERS: false,
-      GUILD_BANS: false,
-      GUILD_EMOJIS: false,
-      GUILD_INTEGRATIONS: false,
-      GUILD_WEBHOOKS: false,
-      GUILD_INVITES: false,
-      GUILD_VOICE_STATES: false,
-      GUILD_PRESENCES: false,
-      GUILD_MESSAGES: false,
-      GUILD_MESSAGE_REACTIONS: false,
-      GUILD_MESSAGE_TYPING: false,
-      DIRECT_MESSAGES: false,
-      DIRECT_MESSAGE_REACTIONS: false,
-      DIRECT_MESSAGE_TYPING: false,
+      ...Object.keys(intents).reduce((acc: any, curr) => (acc[curr]=false, acc), {}),
       privilegedIntents: state.privilegedIntents,
       intents: 0,
-      eventsCount: basicIntents.length
+      eventsCount: defaultIntents.length
     })
   }
 
@@ -314,7 +164,7 @@ function App() {
               </Typography>
               <List dense component="div" role="list">
             {
-              basicIntents.map(intent => <Tooltip key={intent.toString()} title={"Open Discord Api Docs about #" + intent.toLowerCase().trim().replace(/_/g, "-")} >
+              defaultIntents.map(intent => <Tooltip key={intent.toString()} title={"Open Discord Api Docs about #" + intent.toLowerCase().trim().replace(/_/g, "-")} >
               <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + intent.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
                 <ListItemText primary={intent} />
               </ListItem>
@@ -340,7 +190,10 @@ function App() {
       <br/>
       
       <Tooltip title="Copy Intents Payload">
-        <Button variant="outlined" onClick={() => copyToClipboard(state.intents)}>
+        <Button variant="outlined" onClick={() => {
+          navigator.clipboard.writeText(state.intents);
+          alert(`Your intent payload has just been copied to the clipboard.  (${state.intents})\nJust set this as your intents payload on the discord api library you're using and you should be ready to go!`);
+        }}>
           Intents : {state.intents}
         </Button>
       </Tooltip>
@@ -348,7 +201,7 @@ function App() {
       <br/>
       <Typography variant='caption'>Click on this button to copy</Typography>
 
-      <p style={{color: 'gray'}}>Copyright © Nasr AA Djeghmoum - Larko#0742 - <a href="https://github.com/Larkooo/discord-intents-calculator">Github</a></p>      
+      <p style={{color: 'gray'}}>Copyright © Nasr AA Djeghmoum - Larko#0742 - <Link href="https://github.com/Larkooo/discord-intents-calculator" underline="always" >Github</Link></p>      
     </Container>
     </ThemeProvider>
     
