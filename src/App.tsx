@@ -171,7 +171,7 @@ function App() {
             </Tooltip>)
           }
           {
-              Object.keys(state).filter(key => state[key] === true).map(key => {
+              Object.keys(state).filter(key => state[key] === true && key in intents).map(key => {
                 return intents[key].map((element, index) => {
                   return <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
                     <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
