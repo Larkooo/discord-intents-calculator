@@ -56,7 +56,7 @@ function App() {
     let eventsCountValue: number = state.eventsCount;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
       intentsValue += (event.target.checked ? 1 : -1) << Object.keys(intents).indexOf(event.target.name);
-      eventsCountValue += event.target.checked ? 1 : -1;
+      event.target.checked ? eventsCountValue += intents[event.target.name].length : eventsCountValue -= intents[event.target.name].length;
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
