@@ -201,7 +201,7 @@ function App() {
       <br/>
       <Typography variant='caption'>Click on this button to copy</Typography>
 
-      <p style={{color: 'gray'}}>Copyright © Nasr AA Djeghmoum - Larko#0742 - <Link href="https://github.com/Larkooo/discord-intents-calculator" underline="always" >Github</Link></p>      
+      <p style={{color: 'gray'}}>Copyright © Nasr AA Djeghmoum - Larko#0742 - <Link href="https://github.com/Larkooo/discord-intents-calculator" underline="always" target="_blank">Github</Link></p>      
     </Container>
     </ThemeProvider>
     
