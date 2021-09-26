@@ -55,14 +55,8 @@ function App() {
     let intentsValue: number = state.intents;
     let eventsCountValue: number = state.eventsCount;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
-      if(event.target.checked) {
-        // index of the key is the offset of the bit shifting, eg. 1 << 0 (guild)
-        intentsValue += 1 << Object.keys(intents).indexOf(event.target.name)
-        eventsCountValue += intents[event.target.name].length
-      } else {
-        intentsValue -= 1 << Object.keys(intents).indexOf(event.target.name)
-        eventsCountValue -= intents[event.target.name].length
-      }
+      intentsValue += (event.target.checked ? 1 : -1) << Object.keys(intents).indexOf(event.target.name);
+      eventsCountValue += event.target.checked ? 1 : -1;
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
@@ -87,8 +81,15 @@ function App() {
     }
   });
 
-  const darkMode = ():void => {
-    if(state.theme === 'dark') {setState({...state, theme: 'light'}); localStorage.setItem('theme', 'light')} else {setState({...state, theme: 'dark'}); localStorage.setItem('theme', 'dark')}
+  const toggleLights = ():void => {
+    if(state.theme === 'dark') {
+      setState({...state, theme: 'light'}); 
+      localStorage.setItem('theme', 'light');
+    }
+    else {
+      setState({...state, theme: 'dark'}); 
+      localStorage.setItem('theme', 'dark');
+    }
   }
 
   return (
@@ -126,7 +127,7 @@ function App() {
         label="Server Members"
       />
       <Tooltip title={state.theme === 'dark' ? "Turn on the lights" : "Turn off the lights"}>
-      <IconButton aria-label="theme" onClick={() => darkMode()}>
+      <IconButton aria-label="theme" onClick={() => toggleLights()}>
           {state.theme === 'dark' ? <Brightness7 fontSize='small' /> : <Brightness6 fontSize="small"/>}
         </IconButton>
       </Tooltip>
