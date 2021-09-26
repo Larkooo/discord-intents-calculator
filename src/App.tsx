@@ -34,17 +34,22 @@ function App() {
 
   const classes = useStyles();
 
-  const [state, setState] : any = React.useState({
+  const initialState = {
     theme: localStorage.getItem('theme') || 'dark',
-    // just spread the intents here, setting them to false as default
-    ...Object.keys(intents).reduce((acc: any, curr) => (acc[curr]=false, acc), {}),
+    // just map the intent keys here; with false as default value
+    ...Object.keys(intents).reduce((acc: any, curr) => {
+      acc[curr] = false;
+      return acc;
+    }, {}),
     privilegedIntents: {
       presence: localStorage.getItem('presenceIntent') === 'true' || false,
       guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false
     },
     intents: 0,
     eventsCount: defaultIntents.length
-  });
+  };
+
+  const [state, setState] : any = React.useState(initialState);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
     let intentsValue: number = state.intents;
@@ -73,13 +78,7 @@ function App() {
   };
 
   const resetIntents = () => {
-    setState({
-      theme: state.theme,
-      ...Object.keys(intents).reduce((acc: any, curr) => (acc[curr]=false, acc), {}),
-      privilegedIntents: state.privilegedIntents,
-      intents: 0,
-      eventsCount: defaultIntents.length
-    })
+    setState(initialState);
   }
 
   const theme = createMuiTheme({
