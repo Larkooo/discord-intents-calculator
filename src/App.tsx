@@ -55,12 +55,8 @@ function App() {
     let intentsValue: number = state.intents;
     let eventsCountValue: number = state.eventsCount;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
-      if (event.target.name === "GUILD_SCHEDULED_EVENTS") {
-        intentsValue += (event.target.checked ? 1 : -1) << 16;
-      } else {
-        intentsValue += (event.target.checked ? 1 : -1) << Object.keys(intents).indexOf(event.target.name);
-      }
-      event.target.checked ? eventsCountValue += intents[event.target.name].length : eventsCountValue -= intents[event.target.name].length;
+      intentsValue += (event.target.checked ? 1 : -1) << intents[event.target.name][1];
+      event.target.checked ? eventsCountValue += intents[event.target.name][0].length : eventsCountValue -= intents[event.target.name][0].length;
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
@@ -176,7 +172,7 @@ function App() {
           }
           {
               Object.keys(state).filter(key => state[key] === true && key in intents).map(key => {
-                return intents[key].map((element, index) => {
+                return intents[key][0].map((element, index) => {
                   return <Tooltip key={element+index.toString()} title={"Open Discord Api Docs about #" + element.toLowerCase().trim().replace(/_/g, "-")} >
                     <ListItem onClick={() => window.open("https://discord.com/developers/docs/topics/gateway#" + element.toLowerCase().trim().replace(/_/g, "-"), "_blank")} button>
                       <ListItemText primary={element} />
