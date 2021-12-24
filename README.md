@@ -2,4 +2,4 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-![screen](http://sc.aymdj.me/cdn/wnqh81dw.png)
+![screen](https://raw.githubusercontent.com/Larkooo/discord-intents-calculator/master/screen.png)

@@ -55,7 +55,11 @@ function App() {
     let intentsValue: number = state.intents;
     let eventsCountValue: number = state.eventsCount;
     if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
-      intentsValue += (event.target.checked ? 1 : -1) << Object.keys(intents).indexOf(event.target.name);
+      if (event.target.name === "GUILD_SCHEDULED_EVENTS") {
+        intentsValue += (event.target.checked ? 1 : -1) << 16;
+      } else {
+        intentsValue += (event.target.checked ? 1 : -1) << Object.keys(intents).indexOf(event.target.name);
+      }
       event.target.checked ? eventsCountValue += intents[event.target.name].length : eventsCountValue -= intents[event.target.name].length;
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
