@@ -139,7 +139,7 @@ function App() {
             color="primary"
           />
         }
-        label="Presence Intent"
+        label="Message Content"
       />
       <Tooltip title={state.theme === 'dark' ? "Turn on the lights" : "Turn off the lights"}>
       <IconButton aria-label="theme" onClick={() => toggleLights()}>
