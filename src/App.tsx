@@ -101,7 +101,7 @@ function App() {
       <CssBaseline />
       <Container className={classes.align}>
       <Typography variant='h4'>
-        Discord Intents Calculator
+        Discord Intents Calculator 
       </Typography>
 
       <Typography variant='body1'>
