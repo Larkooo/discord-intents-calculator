@@ -61,13 +61,13 @@ function App() {
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
-        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
+        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers, messageContent: state.privilegedIntents.messageContent}});
         localStorage.setItem('presenceIntent', event.target.checked.toString())
       } else if(event.target.name === "messageContent") {
-        setState({ ...state, privilegedIntents: {messageContent: event.target.checked, messageContent: state.privilegedIntents.messageContent}});
+        setState({ ...state, privilegedIntents: {messageContent: event.target.checked, guildMembers:state.privilegedIntents.guildMembers, presence: state.privilegedIntents.presence}});
         localStorage.setItem('messageContentIntent', event.target.checked.toString())
       } else {
-        setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}});
+        setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence, messageContent: state.privilegedIntents.messageContent}});
         localStorage.setItem('guildMembersIntent', event.target.checked.toString())
       }
       
