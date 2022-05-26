@@ -64,8 +64,8 @@ function App() {
         setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
         localStorage.setItem('presenceIntent', event.target.checked.toString())
       } else if(event.target.name === "messageContent") {
-        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
-        localStorage.setItem('presenceIntent', event.target.checked.toString())
+        setState({ ...state, privilegedIntents: {presence: event.target.checked, messageContent: state.privilegedIntents.messageContent}});
+        localStorage.setItem('messageContentIntent', event.target.checked.toString())
       } else {
         setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}});
         localStorage.setItem('guildMembersIntent', event.target.checked.toString())
@@ -160,7 +160,7 @@ function App() {
             {
               Object.keys(intents).map(key => 
                 <FormControlLabel
-                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} indeterminate={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} />}
+                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" ? !state.privilegedIntents.messageContent && key === "MESSAGE_CONTENT"} indeterminate={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" ? !state.privilegedIntents.guildMembers : !state.privilegedIntents.messageContent && key === "MESSAGE_CONTENT"} />}
                   label={key}
                   key={key}
                 />
