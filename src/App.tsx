@@ -43,7 +43,8 @@ function App() {
     }, {}),
     privilegedIntents: {
       presence: localStorage.getItem('presenceIntent') === 'true' || false,
-      guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false
+      guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false,
+      messageContent: localStorage.getItem('messageContentIntent') === 'true' || false
     },
     intents: 0,
     eventsCount: defaultIntents.length
@@ -54,12 +55,15 @@ function App() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
     let intentsValue: number = state.intents;
     let eventsCountValue: number = state.eventsCount;
-    if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
+    if(event.target.name !== "presence" && event.target.name !== "guildMembers" && event.target.name !== "messageContent") {
       intentsValue += (event.target.checked ? 1 : -1) << intents[event.target.name][1];
       event.target.checked ? eventsCountValue += intents[event.target.name][0].length : eventsCountValue -= intents[event.target.name][0].length;
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
+        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
+        localStorage.setItem('presenceIntent', event.target.checked.toString())
+      } else if(event.target.name === "messageContent") {
         setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
         localStorage.setItem('presenceIntent', event.target.checked.toString())
       } else {
@@ -125,6 +129,17 @@ function App() {
           />
         }
         label="Server Members"
+      />
+      FormControlLabel
+        control={
+          <Switch
+            checked={state.privilegedIntents.messageContent}
+            onChange={handleChange}
+            name="messageContent"
+            color="primary"
+          />
+        }
+        label="Presence Intent"
       />
       <Tooltip title={state.theme === 'dark' ? "Turn on the lights" : "Turn off the lights"}>
       <IconButton aria-label="theme" onClick={() => toggleLights()}>
