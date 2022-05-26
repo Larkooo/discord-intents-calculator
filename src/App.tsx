@@ -130,7 +130,7 @@ function App() {
         }
         label="Server Members"
       />
-      FormControlLabel
+      <FormControlLabel
         control={
           <Switch
             checked={state.privilegedIntents.messageContent}
