@@ -110,6 +110,8 @@ const intents : {[key: string]: [string[], number]} = {
   DIRECT_MESSAGE_TYPING: [[
     "TYPING_START"
   ], 14],
+    
+  MESSAGE_CONTENT: [[], 15],
   
   GUILD_SCHEDULED_EVENTS: [[
     "GUILD_SCHEDULED_EVENT_CREATE",

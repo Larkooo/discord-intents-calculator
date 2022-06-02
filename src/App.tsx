@@ -43,7 +43,8 @@ function App() {
     }, {}),
     privilegedIntents: {
       presence: localStorage.getItem('presenceIntent') === 'true' || false,
-      guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false
+      guildMembers: localStorage.getItem('guildMembersIntent') === 'true' || false,
+      messageContent: localStorage.getItem('messageContentIntent') === 'true' || false
     },
     intents: 0,
     eventsCount: defaultIntents.length
@@ -54,16 +55,19 @@ function App() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
     let intentsValue: number = state.intents;
     let eventsCountValue: number = state.eventsCount;
-    if(event.target.name !== "presence" && event.target.name !== "guildMembers") {
+    if(event.target.name !== "presence" && event.target.name !== "guildMembers" && event.target.name !== "messageContent") {
       intentsValue += (event.target.checked ? 1 : -1) << intents[event.target.name][1];
       event.target.checked ? eventsCountValue += intents[event.target.name][0].length : eventsCountValue -= intents[event.target.name][0].length;
       setState({ ...state, [event.target.name]: event.target.checked, intents: intentsValue, eventsCount: eventsCountValue});
     } else {
       if(event.target.name === "presence") {
-        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers}});
+        setState({ ...state, privilegedIntents: {presence: event.target.checked, guildMembers: state.privilegedIntents.guildMembers, messageContent: state.privilegedIntents.messageContent}});
         localStorage.setItem('presenceIntent', event.target.checked.toString())
+      } else if(event.target.name === "messageContent") {
+        setState({ ...state, privilegedIntents: {messageContent: event.target.checked, guildMembers:state.privilegedIntents.guildMembers, presence: state.privilegedIntents.presence}});
+        localStorage.setItem('messageContentIntent', event.target.checked.toString())
       } else {
-        setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence}});
+        setState({ ...state, privilegedIntents: {guildMembers: event.target.checked, presence: state.privilegedIntents.presence, messageContent: state.privilegedIntents.messageContent}});
         localStorage.setItem('guildMembersIntent', event.target.checked.toString())
       }
       
@@ -97,7 +101,7 @@ function App() {
       <CssBaseline />
       <Container className={classes.align}>
       <Typography variant='h4'>
-        Discord Intents Calculator
+        Discord Intents Calculator 
       </Typography>
 
       <Typography variant='body1'>
@@ -126,6 +130,17 @@ function App() {
         }
         label="Server Members"
       />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={state.privilegedIntents.messageContent}
+            onChange={handleChange}
+            name="messageContent"
+            color="primary"
+          />
+        }
+        label="Message Content"
+      />
       <Tooltip title={state.theme === 'dark' ? "Turn on the lights" : "Turn off the lights"}>
       <IconButton aria-label="theme" onClick={() => toggleLights()}>
           {state.theme === 'dark' ? <Brightness7 fontSize='small' /> : <Brightness6 fontSize="small"/>}
@@ -145,7 +160,7 @@ function App() {
             {
               Object.keys(intents).map(key => 
                 <FormControlLabel
-                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} indeterminate={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" && !state.privilegedIntents.guildMembers} />}
+                  control={<Checkbox checked={state[key]} onChange={handleChange} name={key} color='default' disabled={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" ? !state.privilegedIntents.guildMembers : key === "MESSAGE_CONTENT" && !state.privilegedIntents.messageContent} indeterminate={key === "GUILD_PRESENCES" ? !state.privilegedIntents.presence : key === "GUILD_MEMBERS" ? !state.privilegedIntents.guildMembers : key === "MESSAGE_CONTENT" && !state.privilegedIntents.messageContent} />}
                   label={key}
                   key={key}
                 />
