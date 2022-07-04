@@ -120,6 +120,16 @@ const intents : {[key: string]: [string[], number]} = {
     "GUILD_SCHEDULED_EVENT_USER_ADD",
     "GUILD_SCHEDULED_EVENT_USER_REMOVE",
   ], 16],
+
+  AUTO_MODERATION_CONFIGURATION: [[
+    "AUTO_MODERATION_RULE_CREATE",
+    "AUTO_MODERATION_RULE_UPDATE",
+    "AUTO_MODERATION_RULE_DELETE"
+  ], 20],
+
+  AUTO_MODERATION_EXECUTION: [[
+    "AUTO_MODERATION_ACTION_EXECUTION"
+  ], 21]
 }
 
 export { defaultIntents, intents }
