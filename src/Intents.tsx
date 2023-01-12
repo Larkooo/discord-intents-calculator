@@ -5,9 +5,6 @@ const defaultIntents: string[] = [
     "RESUMED",
     "VOICE_SERVER_UPDATE",
     "USER_UPDATE",
-    // "APPLICATION_COMMAND_CREATE",
-    // "APPLICATION_COMMAND_UPDATE",
-    // "APPLICATION_COMMAND_DELETE",
     "INTERACTION_CREATE"
 ]
 
