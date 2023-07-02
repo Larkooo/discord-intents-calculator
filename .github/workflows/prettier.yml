@@ -3,13 +3,13 @@ name: Prettier Check
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup Node.js Environment
-      uses: actions/setup-node@v3.6.0
-    - name: Install Dependencies
-      run: yarn install
-    - name: Check Formatting
-      run: prettier --check .
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Setup Node.js Environment
+              uses: actions/setup-node@v3.6.0
+            - name: Install Dependencies
+              run: yarn install
+            - name: Check Formatting
+              run: yarn prettier --check .
