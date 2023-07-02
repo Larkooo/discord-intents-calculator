@@ -1,4 +1,4 @@
-// from discord api docs
+// https://discord.com/developers/docs/topics/gateway#list-of-intents
 
 const defaultIntents: string[] = [
     "READY",
@@ -26,7 +26,7 @@ const intents: { [key: string]: [string[], number] } = {
             "THREAD_DELETE",
             "THREAD_LIST_SYNC",
             "THREAD_MEMBER_UPDATE",
-            "THREAD_MEMBERS_UPDATE *",
+            "THREAD_MEMBERS_UPDATE",
             "STAGE_INSTANCE_CREATE",
             "STAGE_INSTANCE_UPDATE",
             "STAGE_INSTANCE_DELETE",
@@ -39,12 +39,15 @@ const intents: { [key: string]: [string[], number] } = {
             "GUILD_MEMBER_ADD",
             "GUILD_MEMBER_UPDATE",
             "GUILD_MEMBER_REMOVE",
-            "THREAD_MEMBERS_UPDATE *",
+            "THREAD_MEMBERS_UPDATE",
         ],
         1,
     ],
 
-    GUILD_BANS: [["GUILD_BAN_ADD", "GUILD_BAN_REMOVE"], 2],
+    GUILD_MODERATION: [
+        ["GUILD_AUDIT_LOG_ENTRY_CREATE", "GUILD_BAN_ADD", "GUILD_BAN_REMOVE"],
+        2,
+    ],
 
     GUILD_EMOJIS_AND_STICKERS: [
         ["GUILD_EMOJIS_UPDATE", "GUILD_STICKERS_UPDATE"],
