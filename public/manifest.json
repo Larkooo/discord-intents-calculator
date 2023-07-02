@@ -1,10 +1,10 @@
 {
-  "short_name": "Intents Calculator",
-  "name": "Discord Intents Calculator",
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
-  "orientation": "any",
-  "description": "A discord intents calculator"
+    "short_name": "Intents Calculator",
+    "name": "Discord Intents Calculator",
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "orientation": "any",
+    "description": "A discord intents calculator"
 }
