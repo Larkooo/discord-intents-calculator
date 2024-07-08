@@ -139,6 +139,16 @@ const intents: { [key: string]: [string[], number] } = {
     ],
 
     AUTO_MODERATION_EXECUTION: [["AUTO_MODERATION_ACTION_EXECUTION"], 21],
+
+    GUILD_MESSAGE_POLLS: [
+        ["MESSAGE_POLL_VOTE_ADD", "MESSAGE_POLL_VOTE_REMOVE"],
+        24,
+    ],
+
+    DIRECT_MESSAGE_POLLS: [
+        ["MESSAGE_POLL_VOTE_ADD", "MESSAGE_POLL_VOTE_REMOVE"],
+        25,
+    ],
 };
 
 export { defaultIntents, intents };
